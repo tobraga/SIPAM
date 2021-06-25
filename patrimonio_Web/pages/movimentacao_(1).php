@@ -44,7 +44,7 @@ tfoot input {
        FROM app.patrimonio_old where id_localizacao = '$sala' ");
         $consulta->execute();
         $consulta = $consulta->fetchAll();
-       // print_r ($consulta);
+        //print_r ($consulta);
        
 
 }else{
@@ -57,6 +57,22 @@ tfoot input {
     }
 
     ?>
+
+ 
+    <?php
+//    $agora = date('d/m/Y-H:i');
+//    echo $agora;
+    ?>
+
+    <?php
+      session_start();
+
+      $user = $_SESSION['uname'];
+      print_r ($user);
+      $data = new DateTime();
+      print_r($data->format('d/m/Y-H:i'));
+    ?>
+
     <form class="form-group" method="post">
    <section class="intro">
   <div class="bg-image h-100">
