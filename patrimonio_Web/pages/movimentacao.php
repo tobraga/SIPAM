@@ -185,7 +185,8 @@ $(document).ready(function() {
                  data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi},
 				success: function(salaOrigi,npatrimonio){
                    
-               alert('Patrimonio:'+numero_patrimonio[0]+'|sala:'+salaOrigi[0]);
+               //alert('Patrimonio:'+numero_patrimonio[0]+'|sala:'+salaOrigi[0]);
+               alert('Enviado com sucesso!');
 				},
             });
         })
