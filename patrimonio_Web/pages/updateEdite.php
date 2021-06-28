@@ -47,7 +47,7 @@ form{
     <?php
 include ('../config/painel.php');
 
-                    $id = (!empty($_GET['id']) ? $_GET['id'] : '');
+  $id = (!empty($_GET['id']) ? $_GET['id'] : '');
 
 if (isset($_POST['acao'])) {
     $patrimonio = $_POST['patrimonio'];
@@ -57,29 +57,29 @@ if (isset($_POST['acao'])) {
     $marca = $_POST['marca'];
     $modelo = $_POST['modelo'];
     $sala = $_POST['sala'];
-    $observacao = $_POST['observacao'];
-
-    if (isset($_POST['inativo'])) {
-    $inativo = "true";
-  }else {
-   $inativo="false";
-    }
-
-
-
 
 
     $sala = (explode(' - ',$sala,3));
     $nsala = $sala[0];
-    $data = date('d/m/y') ;
+  // $data = date('d/m/y') ;
+   $observacao = $_POST['obs'];
 
-    $updateItem = Painel::updateEquip($patrimonio,$descricao,$nserie,$service,$marca,$modelo,$nsala,$data,$id,$inativo,$observacao);
-    Painel::alert('sucesso','Item atualizado com sucesso!');
+
+if(isset($_POST['inativo']))
+{
+       $inativo = "true";
+}
+else
+{
+    $inativo = "false";
+}
+$updateItem = Painel::updateEquip($patrimonio,$descricao,$nserie,$service,$marca,$modelo,$nsala,$id,$inativo,$observacao);
+Painel::alert('sucesso','Item atualizado com sucesso!');
 
 
 }
 
-    $editando = Conexao::conectar()->prepare("SELECT   * FROM app.patrimonio_old WHERE id = $id");
+    $editando = Conexao::conectar()->prepare("SELECT * FROM app.patrimonio_old WHERE id = $id");
     $editando->execute();
     $editando = $editando->fetchAll();
 
@@ -89,7 +89,7 @@ if (isset($_POST['acao'])) {
 
         ?>
 <div class="form-group">
-    <label for="descricao">Patrimônio</label>
+    <label for="patrimonio">Patrimônio</label>
     <input type="text" class="form-control" id="patrimonio" name="patrimonio" aria-describedby="patrimonioHelp" placeholder="Patrimônio do Equipamento" value="<?php echo $consulta ['numero_patrimonio'];?>">
   </div>
   <div class="form-group">
@@ -97,74 +97,57 @@ if (isset($_POST['acao'])) {
     <input type="text" class="form-control" id="descricao" name="descricao" aria-describedby="descricaoHelp" placeholder="Descrição do Equipamento" value="<?php echo $consulta ['descricao'];?>">
   </div>
   <div class="form-group">
-    <label for="marca">Número de Série</label>
-    <input type="text" class="form-control" id="marca" name="nserie"placeholder=" Número de Série do Equipamento" value="<?php echo $consulta ['numero_serie'];?>"  >
+    <label for="nserie">Número de Série</label>
+    <input type="text" class="form-control" id="nserie" name="nserie"placeholder=" Número de Série do Equipamento" value="<?php echo $consulta ['numero_serie'];?>"  >
   </div>
   <div class="form-group">
-    <label for="marca">Service_Tag</label>
-    <input type="text" class="form-control" id="marca" name="service"placeholder="Service_Tag do Equipamento" value="<?php echo $consulta ['service_tag'];?>" >
+    <label for="service">Service_Tag</label>
+    <input type="text" class="form-control" id="service" name="service"placeholder="Service_Tag do Equipamento" value="<?php echo $consulta ['service_tag'];?>" >
   </div>
   <div class="form-group">
     <label for="marca">Marca</label>
-    <input type="text" class="form-control" id="marca" name="marca"placeholder="Marca do Equipamento" value="<?php
-    echo $consulta ['marca'];?>">
+    <input type="text" class="form-control" id="marca" name="marca"placeholder="Marca do Equipamento" value="<?php echo $consulta ['marca'];?>">
   </div>
-  
   <div class="form-group">
-    <label for="marca">Modelo</label>
-    <input type="text" class="form-control" id="marca" name="modelo"placeholder="Marca do Equipamento" value="<?php 
-    echo $consulta ['modelo'];?>" >
+    <label for="modelo">Modelo</label>
+    <input type="text" class="form-control" id="modelo" name="modelo"placeholder="Modelo do Equipamento" value="<?php echo $consulta ['modelo'];?>" >
   </div>
- 
-  <div class="form-group">
-    <label for="marca">Sala:</label>
-  <select name="sala" id="sala" class="form-control" >
-    <option  value="<?php echo $consulta ['id_localizacao'];?>"><?php
-    echo $consulta ['id_localizacao'];?></option>
-  </div>
-  
     
+
+     <div class="form-group">
+    <label for="marca">Sala:</label>
+    <select name="sala" id="sala" class="form-control" >
+      <option  value="<?php echo $consulta ['id_localizacao'];?>"><?php echo $consulta ['id_localizacao'];?></option>
       <?php  
         $consultaSala = Conexao::conectar()->prepare("SELECT id|| ' - '||localizacao as localizacao FROM app.localizacao;");
         $consultaSala->execute();
         $consultaSala = $consultaSala->fetchAll();
         foreach( $consultaSala as $consultaSala){
           ?>
-          
       	<option value="<?php echo $consultaSala ['localizacao'] ;?>">
 						<?php echo $consultaSala ['localizacao']; ?>
 
           </option>
           <?php }?>
-       <?php }?>
+       
+
     </select>
-  
-  
   </div>
+  <div class="custom-control custom-checkbox">
+  <?php if($consulta ['inativo'] == "true") {?>
+  <input type="checkbox" class="custom-control-input" id="defaultChecked2" name="inativo" value="inativo" checked >
+  <?php }else{?>
+  <input type="checkbox" class="custom-control-input" id="defaultChecked2" name="inativo" value="inativo"  >
 
-  
-  <div class="checkbox">
-
-  <?php
-
-if ($consulta ['inativo']==1){?>
-   <label><input type="checkbox" checked name="inativo" > Inativo</label>
-<?php }else{?>
-   <label><input type="checkbox" name="inativo" > Inativo</label>
-<?php }?>
-
-
-
-
-          
-
+  <?php }?>
+  <label class="custom-control-label" for="defaultChecked2" >Inativo</label>
 </div>
-<p><b> Observação:</b></p>
-<textarea rows="04" cols="253" maxlength="500" name='observacao'><?php 
-    echo $consulta ['observacao'];?></textarea>
-
-  <button type="submit" class="btn btn-danger" name='acao'>Atualizar </button>
-
+   <div class="form-group">
+  <label for="obs">Observação:</label>
+  <textarea class="form-control" rows="5" id="observacao" name="obs" placeholder="Digite uma observação em caso de Inativo" ><?php echo $consulta ['observacao'];?></textarea>
+</div> 
+<?php }?>
+  <button type="submit" class="btn btn-danger" name='acao'>Atualizar</button>
 </form>
 
 <?php

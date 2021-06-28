@@ -57,8 +57,8 @@ if (isset($_POST['acao'])) {
     $modelo = $_POST['modelo'];
     $sala = $_POST['sala'];
     $sala = (explode(' - ',$sala,3));
-    $nsala = $sala[0];
-    $data = date('Y/m/d');
+  $nsala = $sala[0];
+   $data = date('Y/m/d');
 
     
    $gravar = new Painel();
@@ -88,17 +88,15 @@ if (isset($_POST['acao'])) {
     <input type="text" class="form-control" id="marca" name="marca"placeholder="Marca do Equipamento" >
   </div>
   <div class="form-group">
-    <label for="marca">Modelo:</label>
-    <input type="text" class="form-control" id="marca" name="modelo"placeholder="Marca do Equipamento" >
+    <label for="modelo">Modelo:</label>
+    <input type="text" class="form-control" id="marca" name="modelo"placeholder="Modelo do Equipamento" >
   </div>
+
 
   <div class="form-group">
     <label for="marca">Sala:</label>
     <select name="sala" id="sala" class="form-control" >
       <option seleted disable value="">-- Selecionar Sala --</option>
-      
-            
-            
       <?php  
         $consultaSala = Conexao::conectar()->prepare("SELECT id|| ' - '||localizacao as localizacao FROM app.localizacao;");
         $consultaSala->execute();
@@ -108,24 +106,13 @@ if (isset($_POST['acao'])) {
       	<option value="<?php echo $consultaSala ['localizacao'] ;?>">
 						<?php echo $consultaSala ['localizacao']; ?>
 
-
-      
-   
-
 					</option>
        <?php }?>
 
     </select>
   </div>
   
-     
   
-      
-           
-      
-      <p><b> Observação:</b></p>
-      <textarea rows="04" cols="200" maxlength="500"></textarea>
-      <br>
   
 
   <button type="submit" class="btn btn-primary" name='acao'>Enviar</button>

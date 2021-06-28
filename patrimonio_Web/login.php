@@ -13,20 +13,21 @@ if (isset($_POST['acao'])) {
 		$_SESSION['login'] = true;
 		$_SESSION['uname'] = $uname;
 		$_SESSION['senha'] = $senha;
+		
 	
 		header('Location: pages/main.php');
 		die();
 }else{
-    echo "Usuário ou Senha incorreto";
+    echo "<p > Usuário ou Senha incorreto <p>";
     }
 }
-
 ?>
 <style>
 a{
 	color: white !important;
     text-decoration:none !important; 
  }
+
 </style>
 
 <!DOCTYPE html>
@@ -80,7 +81,6 @@ a{
 			<div class="card-footer">
 				<div class="d-flex justify-content-center links">
 				Sistema de Patrimônio Web do CRBE <br>
-				<button  type="button" class="btn btn-outline-success"><a href="cadastro_usuario.php">Cadastrar-se</a></button>
 
 				</div>
 				

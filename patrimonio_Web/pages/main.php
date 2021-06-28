@@ -1,5 +1,5 @@
-
 <?php
+session_start();
 
     if (!isset($_SESSION['login']))
     {
@@ -8,6 +8,7 @@
     
 
 ?>
+
 
 
 <!DOCTYPE html>
@@ -21,13 +22,13 @@
   <meta name="author" content="">
 
   <title>Patrimônio Web CRBE</title>
-  <link href="lib/font-awesome/css/all.css" rel="stylesheet" type="text/css">
+  <link href="../lib/font-awesome/css/all.css" rel="stylesheet" type="text/css">
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" type="text/css">
 
   <!-- Custom styles for this template -->
-  <link rel="stylesheet" href="css/simple-sidebar.css" type="text/css">
+  <link rel="stylesheet" href="../css/simple-sidebar.css" type="text/css">
 </head>
 
 <body>
@@ -38,12 +39,10 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Patrimônio WEB</div>
       <div class="list-group list-group-flush">
-        <a href="pages/cadastrar.php" class="list-group-item list-group-item-action bg-light" >Cadastrar Equipamentos</a>
-        <a href="pages/editar.php" class="list-group-item list-group-item-action bg-light" > Editar Equipamentos</a>
-        <a href="pages/consultar.php" class="list-group-item list-group-item-action bg-light">Consultar Equipamentos</a>
-        <a href="pages/mov.php" class="list-group-item list-group-item-action bg-light">Movimentar Patrimônio</a>
-        <a href="pages/movimentacao.php" class="list-group-item list-group-item-action bg-light">Movimentação</a>
-        
+        <a href="cadastrar.php" class="list-group-item list-group-item-action bg-light" >Cadastrar Equipamentos</a>
+        <a href="editar.php" class="list-group-item list-group-item-action bg-light" > Editar Equipamentos</a>
+        <a href="consultar.php" class="list-group-item list-group-item-action bg-light">Consultar Equipamentos</a>
+        <a href="movimentacao.php" class="list-group-item list-group-item-action bg-light">Movimentar Patrimonio</a>
        
       </div>
     </div>
@@ -71,7 +70,7 @@
                 <a class="dropdown-item" href="#">Action</a>
                 <a class="dropdown-item" href="#">Another action</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="pages/logout.php">Logout</a>
+                <a class="dropdown-item" href="logout.php">Logout</a>
               </div>
             </li>
           </ul>
@@ -94,8 +93,8 @@
 
 
 
-  <script src="lib/jquery/js/jquery.min.js"></script>
-  <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../lib/jquery/js/jquery.min.js"></script>
+  <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Menu Toggle Script -->
   <script>

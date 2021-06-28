@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -12,19 +14,17 @@
 
 
 </head>
-
 <nav class="navbar navbar-dark bg-dark">
-  <a class="navbar-brand" href="../index.php"> << Retornar </a>
+  <a class="navbar-brand" href="main.php"> << Retornar</a>
 </nav>
-
 <style>
-tfoot input {
+tfoot input { 
         width: 100%;
         padding: 3px;
         box-sizing: border-box;
     }
-     #example_wrapper{
-        padding: 15px
+     #example_wrapper {
+        padding: 15px;
     }
     .navbar{
         background-color: black;
@@ -33,13 +33,19 @@ tfoot input {
      .navbar a{
         color: white;
     }
+    
     </style>
 <body>
     <?php
     include ('../config/painel.php');
 
-        $consulta = Painel::selectALL();
-       
+       $consulta = Conexao::conectar()->prepare("SELECT distinct  numero_patrimonio,descricao,numero_serie,service_tag,marca,modelo,uorgs_id,id_localizacao|| ' - ' ||setor as id_localizacao,inativo,observacao,last_update 
+       FROM app.patrimonio_old 
+       INNER JOIN app.localizacao_old  ON id_localizacao = localizacao_old.id 
+       INNER JOIN app.uorgs ON uorgs_id = uorgs.id 
+       ORDER BY last_update DESC ");
+        $consulta->execute();
+        $consulta = $consulta->fetchAll();
     ?>
     <table id="example" class="table table-striped table-bordered" style="width:100%">
         <thead>
@@ -50,8 +56,12 @@ tfoot input {
                 <th>Service tag</th>
                 <th>Marca</th>
                 <th>Modelo</th>
+                <th>UORG</th>
                 <th>Sala</th>
                 <th>Ultima Atualização</th>
+                <th>Inativo</th>
+                <th>Observacao</th>
+                
                    <tfoot>
             <tr>
                 <th>patrimonio</th>
@@ -60,7 +70,10 @@ tfoot input {
                 <th>service tag</th>
                 <th>marca</th>
                 <th>modelo</th>
+                <th>UORG</th>
                 <th>Sala</th>
+                <th>Inativo</th>
+                <th>Observacao</th>
                 <th>editar</th>
             </tr>
         </tfoot>
@@ -69,6 +82,9 @@ tfoot input {
         </thead>
         <tbody id="myTable">
             <?php foreach($consulta as $consulta){
+                 $data = substr($consulta ['last_update'],0,10);
+                $data = explode("-", $data);
+                $data = $data[2]."/".$data[1]."/".$data[0];
                 ?>
             <tr>
                 <td><?php echo $consulta ['numero_patrimonio'];?></td>
@@ -77,8 +93,16 @@ tfoot input {
                 <td><?php echo $consulta ['service_tag'];?></td>
                 <td><?php echo $consulta ['marca'];?></td>
                 <td><?php echo $consulta ['modelo'];?></td>
+                <td><?php echo $consulta ['uorgs_id'];?></td>
                 <td><?php echo $consulta ['id_localizacao'];?></td>
-                <td><?php echo $consulta ['last_update'];?></td>
+                <td><?php echo $data;?></td>
+                 <?php if ($consulta ['inativo'] == "true"){?>
+                <td>true</td>
+                    <?php }else{?>
+                <td>false</td>
+                <?php }?>
+                <td><?php echo $consulta ['observacao'];?></td>
+                
 
                 
             </tr>
@@ -94,6 +118,8 @@ tfoot input {
   <script src="../lib/datatables/js/dataTables.bootstrap4.min.js"></script>
   <script src="../lib/datatables/js/dataTables.fixedHeader.min.js"></script>
   <script src="../lib/datatables/js/dataTables.responsive.min.js"></script>
+  <script src="../lib/datatables/js/dataTables.colReorder.min.js"></script>
+  <script src="../lib/datatables/js/buttons.colVis.min.js"></script>
   <script src="../lib/datatables/js/responsive.bootstrap.min.js"></script>
   <script src="../lib/datatables/js/dataTables.buttons.min.js"></script> 
   <script src="../lib/datatables/js/pdfmake.min.js"></script>
@@ -108,12 +134,31 @@ tfoot input {
 <script>
     $(document).ready(function() {
     $('#example').DataTable( {
-          dom: 'Bfrtip',
+    dom: 'Bfrtip',   
+    colReorder: true,
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print', 
-        ],   
-     
-      "order": [[ 7, "desc" ]],
+     //      'colvis',
+           
+               {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+            },
+               {
+                extend: 'csv',
+                orientation: 'landscape',
+                
+            },
+             {
+                extend: 'print',
+                orientation: 'landscape',
+            },
+              {
+                extend: 'copy',
+                orientation: 'landscape',
+            },
+        ], 
+      
+     "order": [[ 8, "desc" ]],
        responsive: true,
        "language": {
             "lengthMenu": "Mostrando _MENU_ registros por página",

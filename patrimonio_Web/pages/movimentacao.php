@@ -53,13 +53,13 @@ tfoot input {
   $consulta[] = null;
 }
   
-  /*  if (isset($_POST['movimentar'])) {
+    if (isset($_POST['movimentar'])) {
     $salaDestino = $_POST['nsalaDest'];
     $date = date("d-m-Y");
     $user = $_SESSION['uname'];
    
 
-    }*/
+    }
 
     ?>
     <form class="form-group" method="post">
@@ -185,7 +185,7 @@ $(document).ready(function() {
                  data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi},
 				success: function(salaOrigi,npatrimonio){
                    
-               alert('Enviado com sucesso');
+               alert('Patrimonio:'+numero_patrimonio[0]+'|sala:'+salaOrigi[0]);
 				},
             });
         })

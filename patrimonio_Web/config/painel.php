@@ -1,6 +1,5 @@
 <?php
 	include ('conexao.php');
-    session_start();
 
 
  class Painel {
@@ -45,18 +44,14 @@
 	}
 
 		//Atualizando Item
-		public static function updateEquip($patrimonio,$descricao,$nserie,$service,$marca,$modelo,$nsala,$data,$id,$inativo,$observacao){
-		$sql = Conexao::conectar()->prepare("UPDATE app.patrimonio_old SET numero_patrimonio = ?, descricao = ?,numero_serie = ?, service_tag = ?,marca = ?,modelo = ?,id_localizacao = ?,last_update = ?, inativo = ?, observacao = ?  WHERE id=$id ");
-		$sql->execute(array($patrimonio,$descricao,$nserie,$service,$marca,$modelo, $nsala,$data,$inativo,$observacao));
+		public static function updateEquip($patrimonio,$descricao,$nserie,$service,$marca,$modelo,$nsala,$id,$inativo,$observacao){
+		$sql = Conexao::conectar()->prepare("UPDATE app.patrimonio_old SET numero_patrimonio = ?, descricao = ?,numero_serie = ?, service_tag = ?,marca = ?,modelo = ?,id_localizacao = ?,last_update = now()::timestamp,inativo =?,observacao = ? WHERE id=$id ");
+		$sql->execute(array($patrimonio,$descricao,$nserie,$service,$marca,$modelo, $nsala,$inativo,$observacao));
 	}
 
-	//Atualizando Item
-	public static function selectPatrimonio($patrimonio){
-		$sql = Conexao::conectar()->prepare("SELECT numero_patrimonio FROM app.patrimonio_old WHERE numero_patrimonio = $patrimonio ");
-		$sql->execute(array($patrimonio));
-	}
+	
 		
-	}
+      }
  
 
 ?>

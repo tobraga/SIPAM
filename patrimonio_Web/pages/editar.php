@@ -19,7 +19,6 @@
 </head>
 <nav class="navbar navbar-dark bg-dark">
   <a class="navbar-brand" href="main.php"> << Retornar</a>
-  
 </nav>
 <style>
 tfoot input {
@@ -38,7 +37,7 @@ tfoot input {
         color: white !important;
         width: 100%
     }
-    
+
     </style>
 <body>
     <?php
@@ -47,10 +46,10 @@ tfoot input {
         $consulta = Conexao::conectar()->prepare("SELECT   * FROM app.patrimonio_old ORDER BY id DESC");
         $consulta->execute();
         $consulta = $consulta->fetchAll();
-        
+       
     ?>
     <!--Criação da Tabela-->
-    <table id="example" class="table table-striped table-bordered" style="width:100%">
+    <table id="example" class="table  table-bordered" style="width:100%">
         <thead>
             <tr>
                 <th>Patrimônio</th>
@@ -62,6 +61,7 @@ tfoot input {
                 <th>Sala</th>
                 <th>Inativo</th>
                 <th>Observacao</th>
+                <th>Última Atualização</th>                
                 <th>Editar Item</th>
                  <tfoot>
             <tr>
@@ -73,21 +73,21 @@ tfoot input {
                 <th>modelo</th>
                 <th>Sala</th>
                 <th>Inativo</th>
-                <th>Observacao</th>       
-               </tr>
-               </tfoot>
-               </tr>
-              
-              
-                                            
+                <th>Observacao</th>
+                <th>Última Atualização</th>                
+
+
                 <th id="editar" >editar</th>
+            </tr>
+               </tfoot>
+            </tr>
         </thead>
-        
-        
-        
         <tbody id="myTable">
             <?php foreach($consulta as $consulta){
                 $id = $consulta['id'];
+                 $data = substr($consulta ['last_update'],0,10);
+                $data = explode("-", $data);
+                $data = $data[2]."/".$data[1]."/".$data[0];
                 ?>
             <tr>
                 <td><?php echo $consulta ['numero_patrimonio'];?></td>
@@ -97,19 +97,26 @@ tfoot input {
                 <td><?php echo $consulta ['marca'];?></td>
                 <td><?php echo $consulta ['modelo'];?></td>
                 <td><?php echo $consulta ['id_localizacao'];?></td>
-                <td><?php echo $consulta ['inativo'];?></td>
-                <td><?php echo $consulta ['observacao'];?></td>
+                 <?php if ($consulta ['inativo'] == "true"){?>
+                <td>true</td>
+                    <?php }else{?>
+                <td>false</td>
+                <?php }?>
+
+                  <td><?php echo $consulta ['observacao'];?></td>
+                <td><?php echo $data;?></td>
+
                <?php echo" <td><a href='updateEdite.php?id=$id'><i class='fas fa-edit'></i></a></td>" ?> 
 
-               
+                
             </tr>
             <?php }?>
           </tbody>   
+         
           
-            
     </table>
 
-  
+
   
   <script src="../lib/jquery/js/jquery.min.js"></script>
   <script src="../lib/datatables/js/jquery.dataTables.min.js"></script>
@@ -117,9 +124,6 @@ tfoot input {
  <script src="../lib/datatables/js/dataTables.fixedHeader.min.js"></script>
  <script src="../lib/datatables/js/dataTables.responsive.min.js"></script>
  <script src="../lib/datatables/js/responsive.bootstrap.min.js"></script>
- 
- 
-
 
 <script>
 
@@ -142,7 +146,7 @@ tfoot input {
             "sLast": "Último"
           }
         },
-        
+
         //Função para a consulta do select
         initComplete: function () {
             this.api().columns().every( function () {
@@ -166,8 +170,8 @@ tfoot input {
         }
     } );  
     
-   
-    
+
+      
     
     });
 /*$(document).ready(function(){
