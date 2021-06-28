@@ -53,16 +53,9 @@ tfoot input {
   $consulta[] = null;
 }
   
-    if (isset($_POST['movimentar'])) {
-    $salaDestino = $_POST['nsalaDest'];
-    $date = date("d-m-Y");
-    $user = $_SESSION['uname'];
-   
-
-    }
 
     ?>
-    <form class="form-group" method="post">
+    <form class="form-group" method="post" >
    <section class="intro">
   <div class="bg-image h-100">
     <div class="mask d-flex align-items-center h-100" style="background-color: rgba(194, 185, 179, 0.2);">
@@ -85,7 +78,7 @@ tfoot input {
                
 
                 <div id="location" class="form-outline form-white  ">
-                 <select class="form-select" name="nsalaDest" >
+                 <select class="form-select" name="nsalaDest" id="nsalaDest" >
                 <option selected>Selecione a sala de Destino</option>
                  <?php
                  $consultaSala = Conexao::conectar()->prepare("SELECT id || ' - ' ||localizacao as id_sala
@@ -162,9 +155,9 @@ tfoot input {
 <script>
 $(document).ready(function() {
       var npatrimonio, descricao, nserie,marca,modelo,salaOrigi;
-
+      var selectDest = document.getElementById('nsalaDest');
+      var salaDest = selectDest.value;
   $('#movimentar').click(function() {
-
     $('.checkBox input:checked').each(function() {
        
       npatrimonio = $(this).closest('tr').find('.npatrimonio').text();
@@ -182,8 +175,8 @@ $(document).ready(function() {
 					url : "../config/movimentacaoBD.php",
 					type : "GET",
                     dataType: 'json',
-                 data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi},
-				success: function(salaOrigi,npatrimonio){
+                 data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi, salaDest: salaDest},
+				success: function(salaOrigi,npatrimonio, salaDest){
                    
                //alert('Patrimonio:'+numero_patrimonio[0]+'|sala:'+salaOrigi[0]);
                alert('Enviado com sucesso!');

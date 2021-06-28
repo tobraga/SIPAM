@@ -1,18 +1,26 @@
 <?php
 
 require_once('conexao.php');
+session_start();
 
 $npatrimonio = $_GET['npatrimonio'];
 $salaOrigi = $_GET['salaOrigi'];
+$salaDest = $_GET['salaDest'];
+//$salaDestino = $_POST['nsalaDest'];
+$date = date("d-m-Y");
+$user = $_SESSION['uname'];
+
+$resultado = Conexao::Conectar()->prepare("	INSERT INTO app.dados_mov (id_dados_mov, sala_origem, sala_destino, data_mov, usuario_mov, status_mov) VALUES ('1','$salaOrigi', '$salaDest', '$date', '$user', 'pendente');
+	");
+
+	$resultado->execute();
 
 
-$resultadoBasico = Conexao::Conectar()->prepare("	SELECT numero_patrimonio, descricao, marca, modelo, id_localizacao
-	FROM app.patrimonio_old WHERE '$npatrimonio' = numero_patrimonio AND '$salaOrigi' = id_localizacao
+$resultadoBasico = Conexao::Conectar()->prepare("	INSERT INTO app.itens_mov (dados_mov_id, patrimonio_id) VALUES ('$npatrimonio','$salaOrigi');
 	");
 
 	$resultadoBasico->execute();
 
-/*$resultadoBasico->execute( array(':lng1' => $lng1, ':lat1' => $lat1, ':lng2' => $lng2, ':lat2' => $lat2) );*/
-$resultadoBasico = $resultadoBasico->fetchAll(PDO::FETCH_CLASS);
-echo json_encode($resultadoBasico);
+
 ?>
+
