@@ -5,12 +5,12 @@ session_start();
 
 $npatrimonio = $_GET['npatrimonio'];
 $salaOrigi = $_GET['salaOrigi'];
-$salaDest = $_GET['salaDest'];
-//$salaDestino = $_POST['nsalaDest'];
+//$salaDest = $_GET['salaDest'];
+$salaDestino = $_GET['salaDestino'];
 $date = date("d-m-Y");
 $user = $_SESSION['uname'];
 
-$resultado = Conexao::Conectar()->prepare("	INSERT INTO app.dados_mov (id_dados_mov, sala_origem, sala_destino, data_mov, usuario_mov, status_mov) VALUES ('1','$salaOrigi', '$salaDest', '$date', '$user', 'pendente');
+$resultado = Conexao::Conectar()->prepare("	s(INSERT INTO app.dados_mov (id_dados_mov, sala_origem, sala_destino, data_mov, usuario_mov, status_mov) VALUES ('1','$salaOrigi', '$salaDestino', '$date', '$user', 'pendente'));
 	");
 
 	$resultado->execute();

@@ -81,13 +81,13 @@ tfoot input {
                  <select class="form-select" name="nsalaDest" id="nsalaDest" >
                 <option selected>Selecione a sala de Destino</option>
                  <?php
-                 $consultaSala = Conexao::conectar()->prepare("SELECT id || ' - ' ||localizacao as id_sala
+                 $consultaSala = Conexao::conectar()->prepare("SELECT id || ' - ' ||localizacao as id_sala, id
 	FROM app.localizacao_old order by id DESC; ");
                  $consultaSala->execute();
                   $consultaSala = $consultaSala->fetchAll();
                   foreach ($consultaSala as $key => $value){
                  ?>
-                     <option value="<?php echo $value['id_sala'];?>">
+                     <option value="<?php echo $value['id'];?>">
                      <?php echo $value['id_sala'];?>
                      </option>
                 <?php }?>
@@ -153,10 +153,18 @@ tfoot input {
   <script src="../lib/jquery/js/jquery.min.js"></script>
 
 <script>
+
+
 $(document).ready(function() {
-      var npatrimonio, descricao, nserie,marca,modelo,salaOrigi;
-      var selectDest = document.getElementById('nsalaDest');
-      var salaDest = selectDest.value;
+      var npatrimonio, descricao, nserie, marca, modelo, salaOrigi, salaDestino;
+      
+      $("#nsalaDest").on('change', function(e){
+        //salaDestino = $(this).val().slice(0, 3);
+        salaDestino = $(this).val();
+        //salaDestino = $(this).val().substr(0, 3);
+        //salaDestino = $(this).val().replace(/[^0-9]/g,'');
+      });
+
   $('#movimentar').click(function() {
     $('.checkBox input:checked').each(function() {
        
@@ -167,27 +175,29 @@ $(document).ready(function() {
      // marca = $(this).closest('tr').find('.marca').html();
      // modelo = $(this).closest('tr').find('.modelo').html();
       salaOrigi = $(this).closest('tr').find('.salaOrigi').text();
-         console.log('ID:'+npatrimonio+'|sala:'+salaOrigi);
+         console.log('ID:'+npatrimonio+'|salaOrigi:'+salaOrigi,+'|salaDestino:'+salaDestino);
 
                   //   alert('ID:'+npatrimonio+'|sala:'+salaOrigi);
-
-        $.ajax({
+                  $.ajax({
 					url : "../config/movimentacaoBD.php",
 					type : "GET",
                     dataType: 'json',
-                 data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi, salaDest: salaDest},
-				success: function(salaOrigi,npatrimonio, salaDest){
+                 data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi, salaDestino: salaDestino},
+				success: function(){
                    
                //alert('Patrimonio:'+numero_patrimonio[0]+'|sala:'+salaOrigi[0]);
-               alert('Enviado com sucesso!');
+               //alert('Enviado com sucesso!');
+               
+              alert('Pedido de Movimentação Realizado com Sucesso!');
+              window.location.href = "http://localhost/patrimonio_Web/pages/main.php";     
 				},
-            });
-        })
-
+        });
     })
-  
-  })
 
+      
+      })
+
+  })
 
 
 </script>
