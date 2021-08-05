@@ -41,8 +41,9 @@ tfoot input {
     include ('../config/painel.php');
     if (isset($_POST['acao'])) {
     (string)$sala = $_POST['nsalaOrigi'];
+    $movimentacaoID = $_POST['idmov'];
     
-    $consulta = Conexao::conectar()->prepare("SELECT  numero_patrimonio,descricao,numero_serie,service_tag,marca,modelo,id_localizacao 
+    $consulta = Conexao::conectar()->prepare("SELECT  id,numero_patrimonio,descricao,numero_serie,service_tag,marca,modelo,id_localizacao 
        FROM app.patrimonio_old where id_localizacao = '$sala' ");
         $consulta->execute();
         $consulta = $consulta->fetchAll();
@@ -52,23 +53,26 @@ tfoot input {
 }else{
   $consulta[] = null;
 }
-  
+$verificarID = Conexao::Conectar()->prepare("SELECT max(id_dados_mov) from app.dados_mov");
+$verificarID->execute();
+$verificarID = $verificarID->fetch();
+$result_id = intval("$verificarID[0]");
+$result_id = $result_id + '1';
 
     ?>
-    <form class="form-group" method="post" >
+    <form class="form-group" method="post">
    <section class="intro">
   <div class="bg-image h-100">
     <div class="mask d-flex align-items-center h-100" style="background-color: rgba(194, 185, 179, 0.2);">
       <div class="container">
         <div class="card" style="background-color: rgba(0,0,0,.7);">
+        <input hidden type="text" name="idmov" id="idmov" value="<?php echo $result_id?>">         
           <div class="card-body p-4">
             <div class="row justify-content-center">
-              <div class="col-lg-12 col-xl-10 d-lg-flex flex-row mb-lg-4 mb-xl-0">
-
+              <div class="col-lg-12 col-xl-10 d-lg-flex flex-row mb-lg-4 mb-xl-0">                
                 <div id="basic" class="form-outline form-white flex-fill me-lg-2 mb-3 mb-lg-0">
                   <input type="text" id="form1" class="form-control" name="nsalaOrigi" placeholder="Digite a sala Origem"/>
                 </div>
-
                 <div class="col-lg-12 col-xl-2">
                 <input class="btn btn-primary btn-rounded btn-block" type="submit" value="Pesquisar" name="acao" />
               </div>
@@ -78,11 +82,11 @@ tfoot input {
                
 
                 <div id="location" class="form-outline form-white  ">
-                 <select class="form-select" name="nsalaDest" id="nsalaDest" >
+                 <select class="form-select" name="nsalaDest" id="nsalaDest"  >
                 <option selected>Selecione a sala de Destino</option>
                  <?php
-                 $consultaSala = Conexao::conectar()->prepare("SELECT id || ' - ' ||localizacao as id_sala, id
-	FROM app.localizacao_old order by id DESC; ");
+                 $consultaSala = Conexao::conectar()->prepare("SELECT id || ' - ' ||localizacao as id_sala, localizacao,id
+	                                                            FROM app.localizacao_old order by id DESC; ");
                  $consultaSala->execute();
                   $consultaSala = $consultaSala->fetchAll();
                   foreach ($consultaSala as $key => $value){
@@ -94,7 +98,7 @@ tfoot input {
                 </select>
                   </div>
                     <div class="col">
-                    <button type="button" class="btn btn-danger" id="movimentar" >Danger</button>
+                    <button type="button" class="btn btn-danger" id="movimentar" >Movimentar</button>
              <!--   <input class="btn btn-danger btn-rounded btn-block" type="submit" value="Movimentar" name="movimentar" id="movimentar" />-->
               </div>
 
@@ -131,13 +135,14 @@ tfoot input {
                 ?>
             <tr>
                 <td class="checkBox"><input type="checkbox"></td>
-                <td class="npatrimonio"><?php echo $consulta ['numero_patrimonio'];?></td>
+                <td class="npatrimonio" ><?php echo $consulta ['numero_patrimonio'];?></td>
                 <td class="descricao"><?php echo $consulta ['descricao'];?></td>
                 <td class="nserie"><?php echo $consulta ['numero_serie'];?></td>
                 <td class="nservice"><?php echo $consulta ['service_tag'];?></td>
                 <td class="marca"><?php echo $consulta ['marca'];?></td>
                 <td class="modelo"><?php echo $consulta ['modelo'];?></td>                
                 <td class="salaOrigi"><?php echo $consulta ['id_localizacao'];?></td>
+                <td style="display:none;" class="idpatrimonio"><?php echo $consulta ['id'];?></td>
             
                 
 
@@ -153,51 +158,63 @@ tfoot input {
   <script src="../lib/jquery/js/jquery.min.js"></script>
 
 <script>
-
-
+    
 $(document).ready(function() {
-      var npatrimonio, descricao, nserie, marca, modelo, salaOrigi, salaDestino;
-      
-      $("#nsalaDest").on('change', function(e){
-        //salaDestino = $(this).val().slice(0, 3);
-        salaDestino = $(this).val();
-        //salaDestino = $(this).val().substr(0, 3);
-        //salaDestino = $(this).val().replace(/[^0-9]/g,'');
-      });
+     
+ var npatrimonio, descricao, nserie,marca,modelo,salaOrigi,salaDestino;
+
+
+
+  $("#nsalaDest").on('change', function(e){
+  salaDestino = $(this).val()
+  
+});
+ id_mov = document.getElementById("idmov").value ; 
+ 
 
   $('#movimentar').click(function() {
+      dados = [];
+      
     $('.checkBox input:checked').each(function() {
        
-      npatrimonio = $(this).closest('tr').find('.npatrimonio').text();
+     // npatrimonio = $(this).closest('tr').find('.npatrimonio').text();
      // descricao = $(this).closest('tr').find('.descricao').html();
      // nserie = $(this).closest('tr').find('.nserie').html();
      // nservice = $(this).closest('tr').find('.nservice').html();
      // marca = $(this).closest('tr').find('.marca').html();
      // modelo = $(this).closest('tr').find('.modelo').html();
       salaOrigi = $(this).closest('tr').find('.salaOrigi').text();
-         console.log('ID:'+npatrimonio+'|salaOrigi:'+salaOrigi,+'|salaDestino:'+salaDestino);
+      idpatrimonio = $(this).closest('tr').find('.idpatrimonio').text();
+
+      dados.push({ idpatrimonio:idpatrimonio})
+
+       
+
+        // console.log('ID:'+npatrimonio+'|salaOrigi:'+salaOrigi+'|salaDestino:'+salaDestino);
 
                   //   alert('ID:'+npatrimonio+'|sala:'+salaOrigi);
-                  $.ajax({
+    
+            	
+
+       
+        })
+        
+        $.ajax({
 					url : "../config/movimentacaoBD.php",
 					type : "GET",
-                    dataType: 'json',
-                 data:{npatrimonio: npatrimonio, salaOrigi: salaOrigi, salaDestino: salaDestino},
-				success: function(){
-                   
-               //alert('Patrimonio:'+numero_patrimonio[0]+'|sala:'+salaOrigi[0]);
-               //alert('Enviado com sucesso!');
-               
-              alert('Pedido de Movimentação Realizado com Sucesso!');
-              window.location.href = "http://localhost/patrimonio_Web/pages/main.php";     
-				},
-        });
+          dataType: 'json',
+          data:{dados:dados, salaDestino: salaDestino, id_mov:id_mov, salaOrigi:salaOrigi},
+				    success: function(){
+
+            },
+            });
+         alert('Pedido de Movimentação Realizado com Sucesso!');
+        window.location.href = "http://localhost/patrimonio_Web/pages/main.php";  
+
     })
-
-      
-      })
-
+  
   })
+
 
 
 </script>

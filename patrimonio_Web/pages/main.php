@@ -43,6 +43,7 @@ session_start();
         <a href="editar.php" class="list-group-item list-group-item-action bg-light" > Editar Equipamentos</a>
         <a href="consultar.php" class="list-group-item list-group-item-action bg-light">Consultar Equipamentos</a>
         <a href="movimentacao.php" class="list-group-item list-group-item-action bg-light">Movimentar Patrimonio</a>
+        <a href="updateTransferencia2.php" class="list-group-item list-group-item-action bg-light">Confirmar Movimentação</a>
        
       </div>
     </div>

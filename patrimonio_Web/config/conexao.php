@@ -13,7 +13,7 @@ class Conexao{
      if(self::$pdo == null){
     try {		
        self::$pdo = new PDO('pgsql:host='.HOST.';dbname='.DBNAME, USER,PASS);
-        //self::$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);  
+        self::$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);  
         } 
         catch (PDOException $e) {
  echo 'Erro na Canexão'.$e->getMessage();
